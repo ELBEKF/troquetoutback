@@ -24,7 +24,6 @@ class OffersController extends Controller
             'photo',
             'disponibilite',
             'statut',
-            'date_creation',
             'user_id'
         )->get();
 
