@@ -9,7 +9,7 @@ use App\Models\Favoris;
 class FavorisController extends Controller
 {
 
-    public function index()
+    public function getFavoris()
     {
         $userId = Auth::id();
 
@@ -71,19 +71,5 @@ class FavorisController extends Controller
     /**
      * Supprimer explicitement un favori
      */
-    public function destroy($offerId)
-    {
-        $userId = Auth::id();
-
-        $favori = Favoris::where('user_id', $userId)
-            ->where('offer_id', $offerId)
-            ->firstOrFail();
-
-        $favori->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Offre retirée des favoris.'
-        ]);
-    }
+    
 }

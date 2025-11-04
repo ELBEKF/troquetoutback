@@ -10,30 +10,31 @@ class MessagesController extends Controller
 {
 
     public function receivedMessages()
-    {
-       
-        if (!Auth::check()) {
-            return redirect('/login')->with('error', 'Veuillez vous connecter pour accéder à vos messages.');
-        }
-
-        $userId = Auth::id(); 
-
-        
-        $receivedMessages = Messages::where('to_user_id', $userId)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $sentMessages = Messages::where('from_user_id', $userId)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        
-        return view('messages_reçus', [
-            'title' => 'Mes messages',
-            'messages' => $receivedMessages,
-            'sent' => $sentMessages
-        ]);
+{
+    if (!Auth::check()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Veuillez vous connecter pour accéder à vos messages.'
+        ], 401);
     }
+
+    $userId = Auth::id(); 
+
+    $receivedMessages = Messages::where('to_user_id', $userId)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    $sentMessages = Messages::where('from_user_id', $userId)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return response()->json([
+        'success' => true,
+        'messages' => $receivedMessages,
+        'sent' => $sentMessages
+    ]);
+}
+
 
     
     public function send(Request $request)

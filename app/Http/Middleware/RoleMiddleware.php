@@ -9,18 +9,23 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-//     /**
-     
-// Handle an incoming request.*
-// @param  \Illuminate\Http\Request  $request
-// @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-// @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-// @param  string  $role*/
+    /**    
+* Handle an incoming request.
+*
+* @param  \Illuminate\Http\Request  $request
+* @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+* @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+* @param  string  $role
+*/
 
     public function handle(Request $request, Closure $next, ...$allowedRoles): Response
     {
         $user = $request->user();
-
+return response()->json([
+                'message' => 'Forbidden. Missing required role.',
+                'required_roles' => $allowedRoles,
+                'your_role' => $user,
+            ], 403);
         // pas connecté → 401
         if (!$user) {
             return response()->json([
@@ -30,7 +35,6 @@ class RoleMiddleware
 
         // rôle de l'utilisateur (string)
         $userRole = $user->role;
-
         // si le rôle du user n'est PAS dans la liste des rôles autorisés → 403
         if (!in_array($userRole, $allowedRoles, true)) {
             return response()->json([

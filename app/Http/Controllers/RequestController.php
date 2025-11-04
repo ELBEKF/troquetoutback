@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class RequestController extends Controller
 {
     // Récupérer toutes les demandes
-    public function index()
+    public function allRequests()
     {
         $data = RequestModel::select(
         'id',
@@ -29,7 +29,7 @@ class RequestController extends Controller
     }
 
     // Créer une nouvelle demande
-    public function store(Request $request)
+    public function addRequests(Request $request)
     {
         $validated = $request->validate([
             'titre' => 'required|string|max:255',
@@ -50,7 +50,7 @@ class RequestController extends Controller
     }
 
     // Mettre à jour une demande
-    public function update(Request $request, $id)
+    public function updateRequest(Request $request, $id)
     {
         $demande = RequestModel::findOrFail($id);
 
@@ -64,7 +64,7 @@ class RequestController extends Controller
     }
 
     // Supprimer une demande
-    public function destroy($id)
+    public function deleteRequest($id)
     {
         $demande = RequestModel::findOrFail($id);
 

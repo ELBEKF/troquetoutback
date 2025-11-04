@@ -13,30 +13,32 @@ class AdminController extends Controller
      * Afficher le tableau de bord de l'administrateur.
      */
     public function dashboard()
-    {
-        // Vérifie que l'utilisateur est admin
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/')->with('error', 'Accès refusé.');
-        }
-
-        // Récupération des données
-        $users = Users::all();
-        $offers = offers::all();
-
-        // Calcul des statistiques
-        $stats = [
-            'total_users' => $users->count(),
-            'total_offers' => $offers->count(),
-        ];
-
-        // Retourne une vue Blade ou une réponse JSON
-        return view('admin.dashboard', [
-            'title' => 'Dashboard Admin',
-            'users' => $users,
-            'offers' => $offers,
-            'stats' => $stats,
-        ]);
+{
+    // Vérifie que l'utilisateur est admin
+    if (!Auth::check() || Auth::user()->role !== 'admin') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Accès refusé.'
+        ], 403);
     }
+
+    $users = Users::all();
+    $offers = Offers::all(); 
+
+
+    $stats = [
+        'total_users' => $users->count(),
+        'total_offers' => $offers->count(),
+    ];
+
+    return response()->json([
+        'success' => true,
+        'stats' => $stats,
+        'users' => $users,
+        'offers' => $offers
+    ], 200);
+}
+
 
     /**
      * Supprimer un utilisateur par son ID.
@@ -62,19 +64,6 @@ class AdminController extends Controller
     /**
      * Supprimer une offre.
      */
-    public function deleteOffer($id)
-    {
-        $admin = Auth::user();
-
-        if ($admin->role !== 'admin') {
-            return redirect('/')->with('error', 'Accès refusé.');
-        }
-
-        $offer = Offers::findOrFail($id);
-        $offer->delete();
-
-        return redirect('/admin')->with('success', 'Offre supprimée avec succès.');
-    }
 
     /**
      * Mettre à jour un utilisateur (admin uniquement).
@@ -102,19 +91,5 @@ class AdminController extends Controller
         return redirect('/admin')->with('success', 'Utilisateur mis à jour avec succès.');
     }
 
-    /**
-     * Récupérer les détails d’un utilisateur (facultatif, pour affichage ou édition).
-     */
-    public function getUserById($id)
-    {
-        $admin = Auth::user();
-
-        if ($admin->role !== 'admin') {
-            return response()->json(['error' => 'Accès refusé.'], 403);
-        }
-
-        $user = Users::findOrFail($id);
-
-        return response()->json(['success' => true, 'data' => $user]);
-    }
+    
 }

@@ -103,18 +103,18 @@ class OffersController extends Controller
         }
 
         $validatedData = $request->validate([
-            'titre' => 'required|string|max:255',
-            'description' => 'required|string',
-            'sens' => 'required|in:offre,demande',
-            'type' => 'required|in:don,pret,location',
-            'categorie' => 'required|string|max:100',
-            'etat' => 'required|in:neuf,bon,use',
-            'prix' => 'required|numeric|min:0',
-            'caution' => 'required|numeric|min:0',
-            'localisation' => 'required|string|max:255',
+            'titre' => '|string|max:255',
+            'description' => '|string',
+            'sens' => '|in:offre,demande',
+            'type' => '|in:don,pret,location',
+            'categorie' => '|string|max:100',
+            'etat' => '|in:neuf,bon,use',
+            'prix' => '|numeric|min:0',
+            'caution' => '|numeric|min:0',
+            'localisation' => '|string|max:255',
             'photo' => 'nullable|file|mimes:jpeg,png,jpg,webp|max:2048',
-            'disponibilite' => 'required|date',
-            'user_id' => 'required|integer|exists:users,id'
+            'disponibilite' => '|date',
+            'user_id' => '|integer|exists:users,id'
         ]);
 
         try {
