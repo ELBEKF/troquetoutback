@@ -18,31 +18,30 @@ class RoleMiddleware
 * @param  string  $role
 */
 
-    public function handle(Request $request, Closure $next, ...$allowedRoles): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        $user = $request->user();
-return response()->json([
-                'message' => 'Forbidden. Missing required role.',
-                'required_roles' => $allowedRoles,
-                'your_role' => $user,
-            ], 403);
-        // pas connecté → 401
-        if (!$user) {
-            return response()->json([
-                'message' => 'Unauthenticated.'
-            ], 401);
-        }
+       return response()->json([
+                'request' => $request->user()
+            ], 200);
+    //     $user = $request->user();
 
-        // rôle de l'utilisateur (string)
-        $userRole = $user->role;
-        // si le rôle du user n'est PAS dans la liste des rôles autorisés → 403
-        if (!in_array($userRole, $allowedRoles, true)) {
-            return response()->json([
-                'message' => 'Forbidden. Missing required role.',
-                'required_roles' => $allowedRoles,
-                'your_role' => $userRole,
-            ], 403);
-        }
+    //     // pas connecté → 401
+    //     if (!$user) {
+    //         return response()->json([
+    //             'message' => 'Unauthenticated.'
+    //         ], 401);
+    //     }
+
+    //     // rôle de l'utilisateur (string)
+    //     $userRole = $user->role;
+    //     // si le rôle du user n'est PAS dans la liste des rôles autorisés → 403
+    //     if (!in_array($userRole, $allowedRoles, true)) {
+    //         return response()->json([
+    //             'message' => 'Forbidden. Missing required role.',
+    //             'required_roles' => $allowedRoles,
+    //             'your_role' => $userRole,
+    //         ], 403);
+    //     }
 
         // sinon on laisse passer
         return $next($request);

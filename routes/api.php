@@ -9,6 +9,7 @@ use App\Http\Controllers\OffersController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\FavorisController;
 use App\Http\Controllers\AdminController;
+use App\Http\Middleware\RoleMiddleware;
 
 // tous les rôles non connecté !!!
 Route::middleware(['guest'])->group(
@@ -21,7 +22,7 @@ Route::middleware(['guest'])->group(
     }
 );
 
-Route::middleware(['auth:sanctum', 'role:admin'])->group(
+Route::middleware([RoleMiddleware::class . ':admin'])->group(
     function () {
         Route::get('/allUser', [UserController::class, 'getUser']);
         Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
